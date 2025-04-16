@@ -1,0 +1,16 @@
+[project]
+name = "ask-git"
+version = "0.1.0"
+description = "Ask Git anything — Powered by Ollama."
+authors = [{ name = "Aayush Jadhav" }]
+dependencies = [
+    "typer[all]",
+    "requests",
+    "gitpython",
+    "rich"
+]
+readme = "README.md"
+requires-python = ">=3.8"
+
+[project.scripts]
+ask-git = "ask_git.cli:main"
