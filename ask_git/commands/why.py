@@ -3,6 +3,7 @@ from pathlib import Path
 
 from ask_git.git_utils.diff import get_diff_for_file
 from ask_git.git_utils.blame import get_blame_for_file
+from ask_git.git_utils.utils import get_relative_path_from_repo_root
 
 app = typer.Typer()
 
@@ -14,7 +15,7 @@ def main(
 ):
     """Explain why a file or a range of lines changed."""
     path = Path(file).resolve()
-
+    import pdb; pdb.set_trace()
     if not path.exists():
         typer.echo(f"❌ File path '{path}' does not exist!")
         raise typer.Exit()
@@ -30,7 +31,8 @@ def main(
     typer.echo(message)
 
     # Get the full diff
-    diff = get_diff_for_file(str(path))
+    relative_path = get_relative_path_from_repo_root(path)
+    diff = get_diff_for_file(str(relative_path))
     if not diff:
         typer.echo("⚠️ No diffs found for this file.")
         return
