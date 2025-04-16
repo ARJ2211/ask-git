@@ -2,8 +2,8 @@ import typer
 
 app = typer.Typer()
 
-@app.command()
-def main(
+@app.callback()
+def why(
     file: str = typer.Argument(..., help="File to analyze"),
     line: int = typer.Option(None, help="Optional line number")
 ):
