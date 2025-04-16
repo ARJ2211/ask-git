@@ -54,3 +54,30 @@ def get_changes_between_commits(commit1: str, commit2: str, repo_path: str = "."
     """
     repo = Repo(repo_path)
     return repo.git.diff(commit1, commit2)
+
+
+def get_repo_root(path: Path = Path.cwd()) -> Path:
+    """
+    Get the root directory of the Git repository.
+
+    Args:
+        path (Path): Any path inside the repo.
+
+    Returns:
+        Path: Path to the root of the Git repository.
+    """
+    return Path(Repo(path, search_parent_directories=True).working_dir)
+
+def get_relative_path_from_repo_root(file_path: Path) -> str:
+    """
+    Convert absolute file path to repo-relative path.
+
+    Args:
+        file_path (Path): Absolute or relative file path.
+
+    Returns:
+        str: Path relative to the root of the Git repository.
+    """
+    repo_root = get_repo_root()
+    return str(file_path.resolve().relative_to(repo_root))
+
