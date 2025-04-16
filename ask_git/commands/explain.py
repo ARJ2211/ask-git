@@ -2,7 +2,7 @@ import typer
 
 app = typer.Typer()
 
-@app.callback()
+@app.command()
 def main(
     file: str = typer.Argument(..., help="File to explain changes for")
 ):

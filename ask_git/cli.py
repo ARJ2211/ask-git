@@ -3,13 +3,13 @@ from ask_git.commands import why, explain, pr_summary, summary
 
 app = typer.Typer(help="Ask Git anything - powered by Ollama")
 
-# Subcommands
-#-------------
+# Register Commands
+#------------------
 
-app.add_typer(why.app, name="why", help="Ask why a file, line, or feature changed.")
-app.add_typer(summary.app, name="summary", help="Summarize changes over time.")
-app.add_typer(explain.app, name="explain", help="Explain recent changes in a file.")
-app.add_typer(pr_summary.app, name="pr-summary", help="Generate a summary of commits like a PR description.")
+app.command(name="explain")(explain.main)
+app.command(name="why")(why.main)
+app.command(name="summary")(summary.main)
+app.command(name="pr_summary")(pr_summary.main)
 
 def main():
     app()
