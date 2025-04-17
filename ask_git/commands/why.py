@@ -19,6 +19,7 @@ def main(
         typer.echo(f"❌ File path '{path}' does not exist!")
         raise typer.Exit()
 
+    # Print analysis context message
     message = f"🔍 Analyzing changes in: {path}"
     if line_end and not line_start:
         typer.echo("❌ Line end given but no line start.")
@@ -29,30 +30,23 @@ def main(
         message += f" (lines {line_start} to {line_end})"
     typer.echo(message)
 
-    # Get the full diff
+    # Get relative path to repo root for GitPython diff
     relative_path = get_relative_path_from_repo_root(path)
+
+    # Get full diff for the file
     diff = get_diff_for_file(str(relative_path))
     if not diff:
         typer.echo("⚠️ No diffs found for this file.")
         return
 
-    # If line range is specified, filter only those lines from the diff
-    if line_start and line_end:
-        selected_lines = []
-        for i, line in enumerate(diff.splitlines(), start=1):
-            if line_start <= i <= line_end:
-                selected_lines.append(line)
+    # Show the full diff (line range slicing skipped)
+    typer.echo(
+        f"\n📄 Git Diff (full file shown, selected lines "
+        "{line_start}-{line_end or line_start}):\n"
+    )
+    typer.echo(diff)
 
-        if not selected_lines:
-            typer.echo("⚠️ No diff lines found within the specified range.")
-        else:
-            typer.echo(f"\n📄 Git Diff (lines {line_start}-{line_end}):\n")
-            typer.echo("\n".join(selected_lines))
-    else:
-        typer.echo("\n📄 Full Git Diff:\n")
-        typer.echo(diff)
-
-    # Show blame if line_start is given
+    # Show blame output if line_start is provided
     if line_start:
         blame = get_blame_for_file(str(path))
         typer.echo(f"\n📌 Blame for lines {line_start} to {line_end or line_start}:\n")
