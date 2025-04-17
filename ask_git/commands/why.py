@@ -1,11 +1,33 @@
 import typer
+
 from pathlib import Path
+
+from rich.console import Console
+from rich.text import Text
 
 from ask_git.git_utils.diff import get_diff_for_file
 from ask_git.git_utils.blame import get_blame_for_file
 from ask_git.git_utils.utils import get_relative_path_from_repo_root
 
 app = typer.Typer()
+console = Console(height=8)
+
+def print_colored_diff(diff: str):
+    styled_text = Text()
+
+    for line in diff.splitlines():
+        if line in ["<<UNSTAGED CHANGES>>", "<<STAGED CHANGES>>", "<<UNTRACKED FILE>>"]:
+            styled_text.append(line + "\n", style="bold blue on white")
+        elif line.startswith("+") and not line.startswith("+++"):
+            styled_text.append(line + "\n", style="green")
+        elif line.startswith("-") and not line.startswith("---"):
+            styled_text.append(line + "\n", style="red")
+        else:
+            styled_text.append(line + "\n")
+
+    with console.pager(styles=True):
+        console.print(styled_text)
+
 
 @app.command()
 def main(
@@ -35,7 +57,6 @@ def main(
 
     # Get full diff for the file
     diff = get_diff_for_file(str(relative_path))
-    import pdb; pdb.set_trace()
     if not diff:
         typer.echo("⚠️ No diffs found for this file.")
         return
@@ -43,9 +64,10 @@ def main(
     # Show the full diff (line range slicing skipped)
     typer.echo(
         f"\n📄 Git Diff (full file shown, selected lines "
-        "{line_start}-{line_end or line_start}):\n"
+        f"{line_start}-{line_end or line_start}):\n"
     )
-    typer.echo(diff) # LOLOL
+
+    print_colored_diff(diff)
 
     # Show blame output if line_start is provided
     if line_start:

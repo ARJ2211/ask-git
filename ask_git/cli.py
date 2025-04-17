@@ -1,6 +1,8 @@
+import os
 import typer
 from ask_git.commands import why, explain, pr_summary, summary
 
+os.environ["PAGER"] = "less -R"
 app = typer.Typer(help="Ask Git anything - powered by Ollama")
 
 # Register Commands
