@@ -15,7 +15,6 @@ def main(
 ):
     """Explain why a file or a range of lines changed."""
     path = Path(file).resolve()
-    import pdb; pdb.set_trace()
     if not path.exists():
         typer.echo(f"❌ File path '{path}' does not exist!")
         raise typer.Exit()

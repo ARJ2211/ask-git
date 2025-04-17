@@ -1,28 +1,36 @@
 from git import Repo
+from pathlib import Path
 
 def get_diff_for_file(file_path: str, repo_path: str = ".") -> str:
     repo = Repo(repo_path)
-    full_path = str(file_path)
+    repo_root = Path(repo.working_tree_dir)
+    full_path = Path(file_path).resolve()
+    rel_path = full_path.relative_to(repo_root).as_posix()
 
     diffs = []
 
-    # Unstaged changes (working tree)
-    for diff_item in repo.index.diff(None, paths=full_path, create_patch=True):
-        if diff_item.a_path == full_path or diff_item.b_path == full_path:
-            diffs.append(diff_item.diff.decode("utf-8", errors="ignore"))
+    # Unstaged diff (working tree vs index)
+    try:
+        unstaged = repo.git.diff(rel_path)
+        if unstaged.strip():
+            diffs.append("<<UNSTAGED CHANGES>>\n" + unstaged)
+    except Exception as e:
+        diffs.append(f"<<UNSTAGED DIFF ERROR>> {e}")
 
-    # Staged changes
-    for diff_item in repo.index.diff("HEAD", paths=full_path, create_patch=True):
-        if diff_item.a_path == full_path or diff_item.b_path == full_path:
-            diffs.append(diff_item.diff.decode("utf-8", errors="ignore"))
+    # Staged diff (index vs HEAD)
+    try:
+        staged = repo.git.diff("--cached", rel_path)
+        if staged.strip():
+            diffs.append("<<STAGED CHANGES>>\n" + staged)
+    except Exception as e:
+        diffs.append(f"<<STAGED DIFF ERROR>> {e}")
 
-    # Untracked files
-    if full_path in repo.untracked_files:
+    # Untracked
+    if rel_path in repo.untracked_files:
         try:
-            with open(full_path, "r") as f:
-                content = f.read()
-            diffs.append(f"<<UNTRACKED FILE>>\n{content}")
+            content = Path(file_path).read_text()
+            diffs.append("<<UNTRACKED FILE>>\n" + content)
         except Exception as e:
-            diffs.append(f"<<UNTRACKED FILE BUT COULD NOT READ>> {e}")
+            diffs.append(f"<<UNTRACKED FILE BUT CANNOT READ>> {e}")
 
-    return "\n".join(diffs)
+    return "\n\n".join(diffs)
