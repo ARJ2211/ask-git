@@ -35,6 +35,7 @@ def main(
 
     # Get full diff for the file
     diff = get_diff_for_file(str(relative_path))
+    import pdb; pdb.set_trace()
     if not diff:
         typer.echo("⚠️ No diffs found for this file.")
         return
@@ -44,18 +45,23 @@ def main(
         f"\n📄 Git Diff (full file shown, selected lines "
         "{line_start}-{line_end or line_start}):\n"
     )
-    typer.echo(diff)
+    typer.echo(diff) # LOLOL
 
     # Show blame output if line_start is provided
     if line_start:
         blame = get_blame_for_file(str(path))
         typer.echo(f"\n📌 Blame for lines {line_start} to {line_end or line_start}:\n")
+
+        current_line = 1
         found = False
+
         for commit, lines in blame:
-            for idx, content in enumerate(lines):
-                lineno = idx + 1
-                if line_start <= lineno <= (line_end or line_start):
+            for line in lines:
+                if line_start <= current_line <= (line_end or line_start):
+                    typer.echo(f"• Line {current_line} by {commit.author.name}: {line.strip()}")
                     found = True
-                    typer.echo(f"• Line {lineno} by {commit.author.name}: {content.strip()}")
+                current_line += 1
+
         if not found:
             typer.echo("⚠️ No matching lines found in blame output.")
+
