@@ -9,11 +9,12 @@ dependencies = [
     "gitpython",
     "rich"
 ]
+license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.8"
 
 [project.scripts]
 ask-git = "ask_git.cli:main"
 
-[tool.setuptools.packages.find]
-include = ["ask_git"]
+[tool.setuptools]
+packages = ["ask_git"]
