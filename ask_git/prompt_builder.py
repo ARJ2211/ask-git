@@ -40,7 +40,7 @@ def build_summary_prompt(commits: list[dict]) -> str:
             Author: {c["author"]}
             Date: {c["date"]}
             Message: {c["message"]}
-            Files changed: {files_str} \n\n
+            Files changed: {files_str} \n
         """
         formatted_commits.append(formatted)
 
@@ -51,11 +51,9 @@ def build_summary_prompt(commits: list[dict]) -> str:
 
         Below is a list of commits made on a branch over a period of time. Each includes a message and the files changed.
 
-        Write a concise, high-level summary of what changed across these commits. Group related changes (e.g., refactors, new features, fixes). Use plain language.
-
         {commits_section}
 
-        Overall summary:
+        Write a concise, high-level summary of what changed across these commits. Group related changes (e.g., refactors, new features, fixes). Use plain language and bullet points.
     """
 
     return prompt

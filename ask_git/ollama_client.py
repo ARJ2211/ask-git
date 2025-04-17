@@ -1,6 +1,6 @@
 import requests
 
-def send_to_ollama(prompt: str, model: str = "codellama") -> str:
+def send_to_ollama(prompt: str, model: str = "codellama:13b") -> str:
     response = requests.post(
         "http://localhost:11434/api/generate",
         json={
@@ -8,7 +8,7 @@ def send_to_ollama(prompt: str, model: str = "codellama") -> str:
             "prompt": prompt,
             "stream": False
         },
-        timeout=60
+        timeout=120
     )
 
     if response.status_code != 200:
