@@ -9,6 +9,10 @@ from ask_git.git_utils.diff import get_diff_for_file
 from ask_git.git_utils.blame import get_blame_for_file
 from ask_git.git_utils.utils import get_relative_path_from_repo_root
 
+from ask_git.prompt_builder import build_why_prompt
+
+from ask_git.ollama_client import send_to_ollama   
+
 app = typer.Typer()
 console = Console(height=8)
 
@@ -70,6 +74,7 @@ def main(
     print_colored_diff(diff)
 
     # Show blame output if line_start is provided
+    blame_lines = []
     if line_start:
         blame = get_blame_for_file(str(path))
         typer.echo(f"\n📌 Blame for lines {line_start} to {line_end or line_start}:\n")
@@ -80,10 +85,28 @@ def main(
         for commit, lines in blame:
             for line in lines:
                 if line_start <= current_line <= (line_end or line_start):
-                    typer.echo(f"• Line {current_line} by {commit.author.name}: {line.strip()}")
+                    typer.echo(
+                        f"• Line {current_line} by "
+                        f"{commit.author.name}: {line.strip()}"
+                    )
+                    blame_lines.append(
+                        (current_line, commit.author.name, line.strip())
+                    )                   
                     found = True
                 current_line += 1
 
         if not found:
             typer.echo("⚠️ No matching lines found in blame output.")
+    
+    prompt = build_why_prompt(
+        file=str(path),
+        line_start=line_start,
+        line_end=(line_end or line_start),
+        diff=diff,
+        blame_lines=blame_lines
+    )
+    typer.echo("\n🧠 Asking Codellama...\n")
+    response = send_to_ollama(prompt)
+    typer.echo(response)
+
 
