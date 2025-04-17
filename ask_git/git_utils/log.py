@@ -1,10 +1,10 @@
 from git import Repo
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 
 def get_commits(
     repo_path: str = ".", 
-    max_count: Optional[int] = 100,
+    max_count: Optional[int] = 20,
     since: Optional[str] = None,
     until: Optional[str] = None,
     author: Optional[str] = None,
@@ -14,7 +14,7 @@ def get_commits(
 
     # Convert since/until to datetime objects once
     since_dt = datetime.strptime(since, "%Y-%m-%d") if since else None
-    until_dt = datetime.strptime(until, "%Y-%m-%d") if until else None
+    until_dt = datetime.strptime(until, "%Y-%m-%d") + timedelta(days=1) if until else None
 
     results = []
     for c in commits:
@@ -43,4 +43,4 @@ def get_commits(
             "files": sorted(files_changed),
         })
     
-    return results
+    return results[:max_count]
