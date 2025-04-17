@@ -1,10 +1,8 @@
 import typer
-import requests
 
 from rich.console import Console
 from rich.text import Text
-from rich.panel import Panel
-from rich.markdown import Markdown
+
 
 from ask_git.git_utils.log import get_commits
 from ask_git.prompt_builder import build_summary_prompt
