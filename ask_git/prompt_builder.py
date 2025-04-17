@@ -26,5 +26,5 @@ def build_explain_prompt(
     return prompt
 
 
-def build_summary_prompy():
+def build_summary_prompt():
     pass
