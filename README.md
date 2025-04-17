@@ -1,6 +1,7 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/ARJ2211/ask-git/refs/heads/main/assets/logo.png">
 </p>
+
 # 🧠 Ask-Git: Git History Explorer with Local LLMs
 
 Ask-Git is a powerful CLI tool that lets developers **understand Git history** using natural language. It wraps around Git commands and feeds relevant context to **local LLMs (via Ollama)** to generate human-readable explanations and summaries — all without uploading your code or commits to the cloud.
@@ -33,16 +34,36 @@ Ask-Git is currently focused on the following capabilities:
 
 Ask-Git is a Python CLI tool. Make sure you have Python 3.8+ installed.
 
+You can install it directly from PyPI:
+
 ```bash
-git clone https://github.com/yourname/ask-git.git
+pip install ask-git
+```
+
+Or clone and install from source:
+
+```bash
+git clone https://github.com/ARJ2211/ask-git.git
 cd ask-git
 pip install -e .
 ```
 
-You also need to install and run [Ollama](https://ollama.com/) locally:
+---
+
+## 🧠 Ollama Setup
+
+You need [Ollama](https://ollama.com/) running locally to use the LLM features.
+
+Install and start Ollama:
 
 ```bash
-ollama run mistral
+ollama serve
+```
+
+Pull a supported model (e.g., CodeLlama):
+
+```bash
+ollama pull codellama
 ```
 
 Make sure it's accessible at `http://localhost:11434`.
