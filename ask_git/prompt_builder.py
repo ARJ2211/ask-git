@@ -26,5 +26,36 @@ def build_explain_prompt(
     return prompt
 
 
-def build_summary_prompt():
-    pass
+def build_summary_prompt(commits: list[dict]) -> str:
+    """
+    Builds a high-level prompt from commit messages and changed files.
+    """
+
+    formatted_commits = []
+    for c in commits:
+        files_str = ", ".join(c["files"]) if c["files"] else "No files listed"
+
+        formatted = f"""\
+            Commit: {c["sha"]}
+            Author: {c["author"]}
+            Date: {c["date"]}
+            Message: {c["message"]}
+            Files changed: {files_str} \n\n
+        """
+        formatted_commits.append(formatted)
+
+    commits_section = "\n\n".join(formatted_commits)
+
+    prompt = f"""\
+        You are a helpful assistant summarizing a project's recent Git activity.
+
+        Below is a list of commits made on a branch over a period of time. Each includes a message and the files changed.
+
+        Write a concise, high-level summary of what changed across these commits. Group related changes (e.g., refactors, new features, fixes). Use plain language.
+
+        {commits_section}
+
+        Overall summary:
+    """
+
+    return prompt
