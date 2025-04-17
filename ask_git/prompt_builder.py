@@ -24,3 +24,7 @@ def build_explain_prompt(
 
     prompt += "\n\nRespond with a concise explanation of why these lines may have changed."
     return prompt
+
+
+def build_summary_prompy():
+    pass
