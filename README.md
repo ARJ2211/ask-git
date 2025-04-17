@@ -1,5 +1,6 @@
-<img src="assets/logo.png">
-
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ARJ2211/ask-git/refs/heads/main/assets/logo.png">
+</p>
 # 🧠 Ask-Git: Git History Explorer with Local LLMs
 
 Ask-Git is a powerful CLI tool that lets developers **understand Git history** using natural language. It wraps around Git commands and feeds relevant context to **local LLMs (via Ollama)** to generate human-readable explanations and summaries — all without uploading your code or commits to the cloud.
