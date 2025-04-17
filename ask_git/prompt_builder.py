@@ -1,4 +1,4 @@
-def build_why_prompt(
+def build_explain_prompt(
     file: str,
     line_start: int,
     line_end: int,

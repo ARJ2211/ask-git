@@ -9,7 +9,7 @@ from ask_git.git_utils.diff import get_diff_for_file
 from ask_git.git_utils.blame import get_blame_for_file
 from ask_git.git_utils.utils import get_relative_path_from_repo_root
 
-from ask_git.prompt_builder import build_why_prompt
+from ask_git.prompt_builder import build_explain_prompt
 
 from ask_git.ollama_client import send_to_ollama   
 
@@ -98,7 +98,7 @@ def main(
         if not found:
             typer.echo("⚠️ No matching lines found in blame output.")
     
-    prompt = build_why_prompt(
+    prompt = build_explain_prompt(
         file=str(path),
         line_start=line_start,
         line_end=(line_end or line_start),
