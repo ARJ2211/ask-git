@@ -32,7 +32,6 @@ def print_colored_diff(diff: str):
     with console.pager(styles=True):
         console.print(styled_text)
 
-
 @app.command()
 def main(
     file: str = typer.Argument(..., help="File to analyze"),
